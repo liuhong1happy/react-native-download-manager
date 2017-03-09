@@ -1,0 +1,24 @@
+{
+  "name": "react-native-download-manager",
+  "version": "0.1.0",
+  "description": "android download manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuhong1happy/react-native-download-manager.git"
+  },
+  "keywords": [
+    "react-native",
+    "DownloadManager",
+    "android"
+  ],
+  "author": "Holly Liu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/liuhong1happy/react-native-download-manager/issues"
+  },
+  "homepage": "https://github.com/liuhong1happy/react-native-download-manager#readme"
+}
