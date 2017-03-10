@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "android download manager",
   "main": "index.js",
+  "files": ["index.js", "README.md"],
   "scripts": {
     "test": "test"
   },
