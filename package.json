@@ -1,87 +1,24 @@
 {
-  "_args": [
-    [
-      {
-        "raw": "git+https://git@github.com/liuhong1happy/react-native-download-manager.git",
-        "scope": null,
-        "escapedName": null,
-        "name": null,
-        "rawSpec": "git+https://git@github.com/liuhong1happy/react-native-download-manager.git",
-        "spec": "git+https://git@github.com/liuhong1happy/react-native-download-manager.git",
-        "type": "hosted",
-        "hosted": {
-          "type": "github",
-          "ssh": "git@github.com:liuhong1happy/react-native-download-manager.git",
-          "sshUrl": "git+ssh://git@github.com/liuhong1happy/react-native-download-manager.git",
-          "httpsUrl": "git+https://git@github.com/liuhong1happy/react-native-download-manager.git",
-          "gitUrl": "git://git@github.com/liuhong1happy/react-native-download-manager.git",
-          "shortcut": "github:liuhong1happy/react-native-download-manager",
-          "directUrl": "https://git@raw.githubusercontent.com/liuhong1happy/react-native-download-manager/master/package.json"
-        }
-      },
-      "/Users/liuhong/workdir/DownloadManagerTest"
-    ]
-  ],
-  "_from": "git+https://git@github.com/liuhong1happy/react-native-download-manager.git",
-  "_id": "react-native-download-manager@0.1.0",
-  "_inCache": true,
-  "_installable": true,
-  "_location": "/react-native-download-manager",
-  "_phantomChildren": {},
-  "_requested": {
-    "raw": "git+https://git@github.com/liuhong1happy/react-native-download-manager.git",
-    "scope": null,
-    "escapedName": null,
-    "name": null,
-    "rawSpec": "git+https://git@github.com/liuhong1happy/react-native-download-manager.git",
-    "spec": "git+https://git@github.com/liuhong1happy/react-native-download-manager.git",
-    "type": "hosted",
-    "hosted": {
-      "type": "github",
-      "ssh": "git@github.com:liuhong1happy/react-native-download-manager.git",
-      "sshUrl": "git+ssh://git@github.com/liuhong1happy/react-native-download-manager.git",
-      "httpsUrl": "git+https://git@github.com/liuhong1happy/react-native-download-manager.git",
-      "gitUrl": "git://git@github.com/liuhong1happy/react-native-download-manager.git",
-      "shortcut": "github:liuhong1happy/react-native-download-manager",
-      "directUrl": "https://git@raw.githubusercontent.com/liuhong1happy/react-native-download-manager/master/package.json"
-    }
-  },
-  "_requiredBy": [
-    "#USER"
-  ],
-  "_resolved": "git+https://git@github.com/liuhong1happy/react-native-download-manager.git#c31c048fc2f666b7803eb0838285f318431425e9",
-  "_shasum": "75448b5292498e497a58b8ce732b150808efc3f4",
-  "_shrinkwrap": null,
-  "_spec": "git+https://git@github.com/liuhong1happy/react-native-download-manager.git",
-  "_where": "/Users/liuhong/workdir/DownloadManagerTest",
-  "author": {
-    "name": "Holly Liu"
-  },
-  "bugs": {
-    "url": "https://github.com/liuhong1happy/react-native-download-manager/issues"
-  },
-  "dependencies": {},
+  "name": "react-native-download-manager",
+  "version": "0.1.0",
   "description": "android download manager",
-  "devDependencies": {},
-  "gitHead": "c31c048fc2f666b7803eb0838285f318431425e9",
-  "homepage": "https://github.com/liuhong1happy/react-native-download-manager#readme",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuhong1happy/react-native-download-manager.git"
+  },
   "keywords": [
     "react-native",
     "DownloadManager",
     "android"
   ],
+  "author": "Holly Liu",
   "license": "MIT",
-  "main": "index.js",
-  "name": "react-native-download-manager",
-  "optionalDependencies": {},
-  "readme": "# react-native-download-manager\nandroid DownloadManager\n",
-  "readmeFilename": "README.md",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/liuhong1happy/react-native-download-manager.git"
+  "bugs": {
+    "url": "https://github.com/liuhong1happy/react-native-download-manager/issues"
   },
-  "scripts": {
-    "test": "test"
-  },
-  "version": "0.1.0"
+  "homepage": "https://github.com/liuhong1happy/react-native-download-manager#readme"
 }
