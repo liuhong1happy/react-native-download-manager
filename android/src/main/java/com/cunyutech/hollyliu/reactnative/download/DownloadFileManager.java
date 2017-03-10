@@ -1,15 +1,15 @@
 package com.cunyutech.hollyliu.reactnative.download;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
-import android.util.Base64;
-import android.widget.ImageView;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.PixelFormat;
+import android.os.Environment;
+import android.webkit.MimeTypeMap;
 import android.app.Activity;
-import android.app.WallpaperManager;
-import android.graphics.BitmapFactory;
+
 
 import android.app.DownloadManager;
 import android.app.DownloadManager.Request;
@@ -18,11 +18,13 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 public class DownloadFileManager extends ReactContextBaseJavaModule {
@@ -34,32 +36,28 @@ public class DownloadFileManager extends ReactContextBaseJavaModule {
     private static final String STATUS_FAILED = "STATUS_FAILED";
     private static final String STATUS_BUSY = "STATUS_BUSY";
 
-    private static final String EVENT_NAME = 'DownloadStatus';
+    private static final String EVENT_NAME = "DownloadStatus";
 
-    private final ReactApplicationContext reactContext;
-    private DownloadManager downManager ;
+    private DownloadManager downloadManager ;
     private Callback rctCallback = null;
     private ReadableMap rctParams;
-    private ResourceDrawableIdHelper mResourceDrawableIdHelper;
     private ReactApplicationContext mApplicationContext;
-    private Activity mCurrentActivity;
+    private long mTaskId;
 
     public DownloadFileManager(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.reactContext = reactContext;
         mApplicationContext = getReactApplicationContext();
-        mCurrentActivity = getCurrentActivity();
-        downManager = (DownloadManager)myActivity.getSystemService(Context.DOWNLOAD_SERVICE);
+        downloadManager = (DownloadManager)reactContext.getSystemService(reactContext.DOWNLOAD_SERVICE);
     }
     @Override
     public String getName() {
         return "DownloadFileManager";
     }
 
-    public void sendMessage(String status, String description, String url){
+    public void sendMessage(Integer status, String description, String url){
         if(rctCallback!=null){
             WritableMap map = Arguments.createMap();
-            map.putString("status", status);
+            map.putInt("status", status);
             map.putString("description", description);
             map.putString("url", url);
             rctCallback.invoke(map);
@@ -68,14 +66,14 @@ public class DownloadFileManager extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void downloadFile(final ReadableMap params, Callback callback){
+    public void download(final ReadableMap params, Callback callback){
         // 获取参数
         String url = params.hasKey("url") ? params.getString("url") : null;
-        String description = params.hasKey("description") ? params.getString("description") : 'downloading';
+        String description = params.hasKey("description") ? params.getString("description") : "downloading";
         // 判断是否未回调继续调用
         if(rctCallback!=null){
             WritableMap map = Arguments.createMap();
-            map.putString("status", -2);
+            map.putInt("status", -2);
             map.putString("description", "busy");
             map.putString("url",url);
             callback.invoke(map);
@@ -88,6 +86,7 @@ public class DownloadFileManager extends ReactContextBaseJavaModule {
         request.setAllowedNetworkTypes(Request.NETWORK_WIFI);
 
         request.setNotificationVisibility(Request.VISIBILITY_VISIBLE); // 是否通知
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         String mimeString = mimeTypeMap.getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(url));
         request.setMimeType(mimeString); // 下载的文件类型
         request.setTitle("下载"); // 通知栏的标题
@@ -97,8 +96,8 @@ public class DownloadFileManager extends ReactContextBaseJavaModule {
         request.setVisibleInDownloadsUi(true);
 
         //设置文件存放目录
-        request.setDestinationInExternalFilesDir(myActivity, Environment.DIRECTORY_DOWNLOADS, description);
-        long mTaskId = downManager.enqueue(request);
+        request.setDestinationInExternalFilesDir(mApplicationContext, Environment.DIRECTORY_DOWNLOADS, description);
+        mTaskId = downloadManager.enqueue(request);
         //注册广播接收者，监听下载状态
         mApplicationContext.registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
@@ -126,8 +125,8 @@ public class DownloadFileManager extends ReactContextBaseJavaModule {
 
     //检查下载状态
     private void checkDownloadStatus() {
-        String url = params.hasKey("url") ? params.getString("url") : null;
-        String description = params.hasKey("description") ? params.getString("description") : 'downloading';
+        String url = rctParams.hasKey("url") ? rctParams.getString("url") : null;
+        String description = rctParams.hasKey("description") ? rctParams.getString("description") : "downloading";
         DownloadManager.Query query = new DownloadManager.Query();
         query.setFilterById(mTaskId);//筛选下载任务，传入任务ID，可变参数
         Cursor c = downloadManager.query(query);
@@ -138,12 +137,12 @@ public class DownloadFileManager extends ReactContextBaseJavaModule {
                 case DownloadManager.STATUS_PENDING:
                 case DownloadManager.STATUS_RUNNING:
                     WritableMap map = Arguments.createMap();
-                    map.putString("status", status);
+                    map.putInt("status", status);
                     map.putString("description", description);
                     map.putString("url", url);
-                    sendEvent(mApplicationContext,EVENT_NAME,map)
+                    sendEvent(mApplicationContext,EVENT_NAME,map);
                     break;
-                case DownloadManager.STATUS_SUCCESSFUL
+                case DownloadManager.STATUS_SUCCESSFUL:
                     String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator + description;
                     sendMessage(status, downloadPath, url);
                     break;
@@ -156,7 +155,7 @@ public class DownloadFileManager extends ReactContextBaseJavaModule {
     //下载到本地后执行安装
     @ReactMethod
     public void installAPK(String downloadPath) {
-        File file = new File(downloadPath)
+        File file = new File(downloadPath);
         if (!file.exists()) return;
         Intent intent = new Intent(Intent.ACTION_VIEW);
         Uri uri = Uri.parse("file://" + file.toString());
@@ -166,7 +165,7 @@ public class DownloadFileManager extends ReactContextBaseJavaModule {
         mApplicationContext.startActivity(intent);
     }
 
-    private void sendEvent(ReactContext reactContext, String eventName, @Nullable WritableMap params) {
+    private void sendEvent(ReactApplicationContext reactContext, String eventName, WritableMap params) {
         reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
     }
 };
