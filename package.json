@@ -1,12 +1,12 @@
 {
   "name": "react-native-download-manager",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "android download manager",
   "main": "index.js",
   "files": [
     "index.js", 
     "README.md",
-    "android"
+    "android/"
   ],
   "scripts": {
     "test": "test"
