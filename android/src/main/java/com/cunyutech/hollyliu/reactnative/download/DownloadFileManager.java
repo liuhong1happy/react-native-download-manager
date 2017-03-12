@@ -132,6 +132,7 @@ public class DownloadFileManager extends ReactContextBaseJavaModule {
         Cursor c = downloadManager.query(query);
         if (c.moveToFirst()) {
             int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+            String downloadPath = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
             switch (status) {
                 case DownloadManager.STATUS_PAUSED:
                 case DownloadManager.STATUS_PENDING:
@@ -143,7 +144,7 @@ public class DownloadFileManager extends ReactContextBaseJavaModule {
                     sendEvent(mApplicationContext,EVENT_NAME,map);
                     break;
                 case DownloadManager.STATUS_SUCCESSFUL:
-                    String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator + description;
+                    // String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator + description;
                     sendMessage(status, downloadPath, url);
                     break;
                 case DownloadManager.STATUS_FAILED:
@@ -184,7 +185,7 @@ public class DownloadFileManager extends ReactContextBaseJavaModule {
         //设置intent的data和Type属性。 
         intent.setDataAndType(Uri.parse(url), mimeString); 
         //跳转 
-        startActivity(intent);     
+        mApplicationContext.startActivity(intent);
         //这里最好try一下，有可能会报错。 
         //比如说你的MIME类型是打开邮箱，但是你手机里面没装邮箱客户端，就会报错。
     } 

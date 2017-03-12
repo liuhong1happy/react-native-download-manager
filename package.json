@@ -1,6 +1,6 @@
 {
   "name": "react-native-download-manager",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "android download manager",
   "main": "index.js",
   "files": [
