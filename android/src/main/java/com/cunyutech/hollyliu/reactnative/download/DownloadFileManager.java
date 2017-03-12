@@ -165,6 +165,30 @@ public class DownloadFileManager extends ReactContextBaseJavaModule {
         mApplicationContext.startActivity(intent);
     }
 
+
+    /**
+    * 打开文件
+    * @param downloadPath
+    */ 
+    @ReactMethod
+    private void openFile(String downloadPath){ 
+        File file = new File(downloadPath);
+        if (!file.exists()) return;
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        String url = "file://" + file.toString();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        String mimeString = mimeTypeMap.getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(url));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
+        //设置intent的Action属性 
+        intent.setAction(Intent.ACTION_VIEW); 
+        //设置intent的data和Type属性。 
+        intent.setDataAndType(Uri.parse(url), mimeString); 
+        //跳转 
+        startActivity(intent);     
+        //这里最好try一下，有可能会报错。 
+        //比如说你的MIME类型是打开邮箱，但是你手机里面没装邮箱客户端，就会报错。
+    } 
+
     private void sendEvent(ReactApplicationContext reactContext, String eventName, WritableMap params) {
         reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
     }
